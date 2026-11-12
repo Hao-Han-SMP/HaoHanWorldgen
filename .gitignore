@@ -2,3 +2,6 @@ out/
 tools/
 backups/
 
+.idea/
+.gradle/
+build/
