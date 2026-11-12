@@ -1,67 +1,81 @@
-# HaoHan-WorldGen
+# HaoHanWorldgen
 
-Plugin tạo thế giới Mặt Trăng (`haohan:lunar`) thuần Java dành cho server HaoHanSMP trên **Purpur / Paper 1.21.11** (Java 21).
-
-> **Lưu ý:** Kho lưu trữ này đã được tích hợp với [HaoHanLunar](https://github.com/Hao-Han-SMP/HaoHanLunar).
+> **Lưu ý:** Kho lưu trữ tiền thân là `HaoHanSMP-datapack`, nay đã được nâng cấp và chuyển đổi thành **Paper / Purpur 1.21.11 Plugin thuần Java** (`HaoHan-WorldGen`) với hiệu năng cao, tích hợp chặt chẽ với [HaoHanLunar](https://github.com/Hao-Han-SMP/HaoHanLunar).
 
 ---
 
-## 🌟 Hệ thống WorldGen Thuần Java Hiện Đại
+## 🌟 Giới thiệu
 
-Toàn bộ thế giới Mặt Trăng đã được chuyển đổi hoàn toàn sang **Paper ChunkGenerator & BiomeProvider thuần Java** theo kiến trúc phân tầng độc lập dạng module:
+**HaoHanWorldgen** là plugin tạo thế giới Mặt Trăng (`haohan:lunar`) thuần Java dành cho máy chủ Minecraft HaoHanSMP chạy nền tảng **Purpur / Paper 1.21.11 (Java 21)**. 
 
-### 1. Kiến trúc phân tầng (Modular Architecture)
-* **`CellularNoise`**: Thuật toán Worley Noise 2D đa tầng, phân bổ hố thiên thạch và các bồn địa va chạm theo khoảng cách hình học chính xác.
-* **`LunarTerrainPipeline`**:
-  * **Biển Mặt Trăng (Maria)**: Đồng bằng dung nham bazan bằng phẳng (độ cao ~35).
-  * **Cao nguyên (Highlands)**: Dãy núi anorthosite gồ ghề (độ cao ~68) với sóng terrain đa octave.
-  * **Hệ thống hố thiên thạch đa quy mô**: Micro (r=3-7), Small (r=8-16), Large (r=20-36 có vành nâng), Mega Basins (r=50-80), và Complex Craters (có đỉnh phản hồi trung tâm - central rebound peak).
-  * **Núi lửa & Caldera**: Nón núi lửa rộng với miệng sụp caldera ở đỉnh.
-  * **Chống tạo gai (Anti-spike clamp)**: Khống chế vành hố giao nhau không vượt quá giới hạn an toàn.
-* **`LunarSurfacePipeline` (Slope & Strata)**:
-  * **Phát hiện độ dốc (Slope / Cliff Detection)**: Tính toán gradient địa hình tại chỗ. Nếu độ dốc vượt ngưỡng (`slant-threshold`), bụi xốp regolith trôi xuống và làm lộ vách đá dốc (`Cobbled Deepslate`, `Tuff`). Vùng phẳng tích tụ bụi bê tông mịn (`Concrete Powder`).
-  * **Tầng địa chất (Strata)**: Lớp mặt phủ regolith (depth 0), lớp đất nén (depth 1-3) và đá nền bên dưới.
-  * **Vết nứt Obsidian**: Các khe nứt obsidian và crying obsidian ở các tầng sâu đáy hố (Y <= 18).
-* **`LunarBiomeProvider`**: Phân bổ mượt mà 7 biome Mặt Trăng (`lunar_maria`, `lunar_terrae`, `lunar_craters`, `lunar_bright_patches`, `lunar_crystal_craters`, `lunar_giant_crystals`, `lunar_giant_crystal_outskirts`).
-* **`LunarPopulator`**: Tạo quặng (Anorthosite, Ilmenite, Kreep Basalt, Pyroxene), các cột tinh thể thạch anh tím (Amethyst Spire) và các tảng đá rơi văng (ejecta boulders).
-* **`LunarStructurePopulator`**: Nạp và đặt trực tiếp các công trình `.nbt` từ resources (`rest_base`, `space_station`, `delta_abandoned_base`, các đảo và cột tinh thể) qua Paper `StructureManager`.
+Toàn bộ thế giới Mặt Trăng được xây dựng dựa trên Paper `ChunkGenerator` & `BiomeProvider` tùy chỉnh, mang lại khả năng sinh địa hình mượt mà, cấu hình linh hoạt qua file YAML và loại bỏ hoàn toàn các giới hạn giật lag của datapack thông thường.
 
----
-
-## ⚙️ Quản lý & Cấu hình trực tiếp (`worldgen.yml`)
-
-Hệ thống tạo file `worldgen.yml` ngay trong thư mục plugin, cho phép điều chỉnh tham số mà không cần đụng vào file JSON phức tạp:
-* Bật/tắt hố thiên thạch, núi lửa, quặng, tinh thể, tảng đá.
-* Điều chỉnh tần suất hố (`frequency-scale`), độ sâu (`depth-scale`), độ nâng vành (`rim-scale`).
-* Tùy biến ngưỡng dốc vách đá (`slant-threshold`) và vật liệu bề mặt.
-
-### 🎮 Lệnh quản trị trong game:
-* `/lunar info`: Hiển thị thông số cấu hình và trạng thái worldgen.
-* `/lunar reload`: Tải lại cấu hình `worldgen.yml` ngay lập tức mà **không cần khởi động lại server**.
-* `/lunar tp`: Dịch chuyển an toàn đến bề mặt Mặt Trăng.
+### ✨ Tính năng nổi bật
+* **Hệ thống tạo địa hình (Terrain Pipeline):**
+  * **Biển Mặt Trăng (Maria):** Vùng trũng dung nham bazan bằng phẳng (độ cao ~35).
+  * **Cao nguyên (Highlands):** Dãy núi anorthosite gồ ghề (độ cao ~68) kết hợp sóng terrain đa octave.
+  * **Hố thiên thạch đa quy mô (Cellular/Worley Noise):** Micro (r=3-7), Small (r=8-16), Large (r=20-36 có vành nâng), Mega Basins (r=50-80) và Complex Craters (có đỉnh va chạm trung tâm).
+  * **Núi lửa & Caldera:** Miệng núi lửa sụp và nón núi lửa rộng.
+  * **Chống tạo gai (Anti-spike clamp):** Đảm bảo địa hình tự nhiên, không bị lỗi đỉnh gai dị dạng.
+* **Xử lý bề mặt & Địa chất (Surface Pipeline):**
+  * **Slope / Cliff Detection:** Tự động phát hiện vách đá dốc để làm lộ tầng đá nền (`Cobbled Deepslate`, `Tuff`), vùng phẳng phủ lớp bụi mịn regolith (`Concrete Powder`).
+  * **Khe nứt sâu:** Vết nứt obsidian và crying obsidian ở các tầng sâu đáy hố (Y <= 18).
+* **Biome Mặt Trăng:** Phân bổ mượt mà 7 biome đặc trưng (`lunar_maria`, `lunar_terrae`, `lunar_craters`, `lunar_bright_patches`, `lunar_crystal_craters`, `lunar_giant_crystals`, `lunar_giant_crystal_outskirts`).
+* **Khoáng sản & Cấu trúc:** Sinh quặng đặc thù (Anorthosite, Ilmenite, Basalt), cụm thạch anh (Amethyst Spire), tảng đá rơi (ejecta boulders) và nạp cấu trúc `.nbt` (trạm dừng chân, trạm vũ trụ, căn cứ bỏ hoang,...).
 
 ---
 
-## 📦 Cách cài đặt & Sử dụng
+## 🛠️ Yêu cầu môi trường
 
-1. Build file `.jar` bằng Gradle hoặc chạy `./package.ps1` / `./package.sh`.
-2. Copy file `out/HaoHan-WorldGen-1.0.0.jar` vào thư mục `plugins/` của server Purpur 1.21.11.
-3. Khởi động server. Plugin sẽ tự động kích hoạt world generator và nạp thế giới `haohan:lunar`.
-
-Plugin khai báo `provides: [HaoHanSMP-Datapack]`, do đó hoàn toàn tương thích và làm việc mượt mà với plugin gameplay `HaoHanLunar`.
+* **Java:** JDK 21 trở lên.
+* **Server:** [Purpur](https://purpurmc.org/) hoặc [Paper](https://papermc.io/) phiên bản **1.21.11** (hoặc tương thích 1.21.x).
 
 ---
 
-## 🛠️ Build & Đóng gói
+## 🔨 Hướng dẫn Build (Đóng gói JAR)
 
+Dự án sử dụng trực tiếp công cụ chuẩn **Gradle Wrapper** đi kèm. Bạn không cần cài đặt thêm script ngoài.
+
+### Trên Linux / macOS:
 ```bash
-# Build Plugin Jar & Chạy Unit Tests
-./gradlew build
+# Cấp quyền thực thi cho gradle wrapper (chỉ cần làm lần đầu)
+chmod +x gradlew
 
-# Đóng gói tự động
-.\package.ps1   # Trên Windows PowerShell
-./package.sh    # Trên Linux / macOS
+# Build và chạy kiểm thử tự động (Unit Tests)
+./gradlew build
 ```
+
+### Trên Windows (PowerShell / CMD):
+```powershell
+.\gradlew.bat build
+```
+
+Sau khi build thành công:
+* File `.jar` đầu ra sẽ nằm tại: **`build/libs/HaoHan-WorldGen-1.0.0.jar`**
+
+---
+
+## 📦 Hướng dẫn Cài đặt & Triển khai
+
+1. **Build hoặc tải file JAR:** Lấy file `HaoHan-WorldGen-1.0.0.jar` từ thư mục `build/libs/`.
+2. **Copy vào Server:** Đặt file JAR vào thư mục `plugins/` trên server Minecraft Purpur/Paper của bạn.
+3. **Khởi động server:**
+   * Plugin sẽ tự động đăng ký bootstrapper, nạp thế giới `haohan:lunar` với cấu hình generator tùy chỉnh.
+   * Plugin cung cấp sẵn flag `provides: [HaoHanSMP-Datapack]`, do đó hoàn toàn tương thích và đồng bộ với plugin gameplay [HaoHanLunar](https://github.com/Hao-Han-SMP/HaoHanLunar).
+
+---
+
+## ⚙️ Cấu hình (`worldgen.yml`)
+
+Khi chạy lần đầu, plugin sẽ tự động sinh file cấu hình `plugins/HaoHan-WorldGen/worldgen.yml`:
+* Tùy chỉnh bật/tắt các yếu tố: hố thiên thạch, núi lửa, quặng, cụm tinh thể, tảng đá văng.
+* Điều chỉnh quy mô và tần suất hố va chạm (`frequency-scale`, `depth-scale`, `rim-scale`).
+* Tùy biến ngưỡng dốc vách đá (`slant-threshold`) và bảng vật liệu phân tầng.
+
+### 🎮 Lệnh quản trị trong game (`haohan.admin` hoặc `OP`):
+* `/lunar info` — Hiển thị chi tiết thông số cấu hình và trạng thái của worldgen.
+* `/lunar reload` — Tải lại cấu hình `worldgen.yml` ngay lập tức mà **không cần khởi động lại máy chủ**.
+* `/lunar tp` — Dịch chuyển an toàn đến bề mặt thế giới Mặt Trăng.
 
 ---
 
