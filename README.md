@@ -1,9 +1,5 @@
 # HaoHanWorldgen
 
-> **Lưu ý:** Kho lưu trữ tiền thân là `HaoHanSMP-datapack`, nay đã được nâng cấp và chuyển đổi thành **Paper / Purpur 1.21.11 Plugin thuần Java** (`HaoHan-WorldGen`) với hiệu năng cao, tích hợp chặt chẽ với [HaoHanLunar](https://github.com/Hao-Han-SMP/HaoHanLunar).
-
----
-
 ## 🌟 Giới thiệu
 
 **HaoHanWorldgen** là plugin tạo thế giới Mặt Trăng (`haohan:lunar`) thuần Java dành cho máy chủ Minecraft HaoHanSMP chạy nền tảng **Purpur / Paper 1.21.11 (Java 21)**. 
